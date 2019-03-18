@@ -13145,7 +13145,7 @@ static int32_t shcampdaf_fw_write_thread(void * arg)
 	SHCAMPDAF_INFO("%s start\n", __func__);
 	
 	if(p_shcampdaf_info->pdaf_spi == NULL){
-		SHCAMPDAF_INFO("%s pdaf_spi=%p\n", __func__, p_shcampdaf_info->pdaf_spi);
+		SHCAMPDAF_INFO("%s pdaf_spi=%pK\n", __func__, p_shcampdaf_info->pdaf_spi);
 		return EINVAL;
 	}
 	
@@ -13508,7 +13508,7 @@ int32_t shcampdaf_fw_init(struct msm_sensor_ctrl_t *s_ctrl, struct sensorb_cfg_d
 		wake_up_process(shcampdaf_info.p_shcampdaf_fw_write_thread);
 		SHCAMPDAF_INFO("%s %d wake_up fw_write process\n", __FUNCTION__, __LINE__);
 	} else {
-		SHCAMPDAF_INFO("%s %d shcampdaf_info.p_shcampdaf_fw_write_thread =%p\n", __FUNCTION__, __LINE__, shcampdaf_info.p_shcampdaf_fw_write_thread);
+		SHCAMPDAF_INFO("%s %d shcampdaf_info.p_shcampdaf_fw_write_thread =%pK\n", __FUNCTION__, __LINE__, shcampdaf_info.p_shcampdaf_fw_write_thread);
 	}
 
 	rc = shcampdaf_ois_init(s_ctrl);
@@ -14090,7 +14090,7 @@ int32_t shcampdaf_read_otp(struct msm_sensor_ctrl_t *s_ctrl, uint8_t *shcam_diag
 					pos+=2;
 				}
 			}
-			SHCAMPDAF_INFO("%s:%d idx=0x%p \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
+			SHCAMPDAF_INFO("%s:%d idx=0x%pK \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
 			
 			pos = (uint8_t *)&shcam_pdaf_binary[0xD0];
 			idx=0;
@@ -14108,7 +14108,7 @@ int32_t shcampdaf_read_otp(struct msm_sensor_ctrl_t *s_ctrl, uint8_t *shcam_diag
 					pos+=2;
 				}
 			}
-			SHCAMPDAF_INFO("%s:%d idx=0x%p \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
+			SHCAMPDAF_INFO("%s:%d idx=0x%pK \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
 			
 			pos = (uint8_t *)&shcam_pdaf_binary[0x1A0];
 			idx=0;
@@ -14157,7 +14157,7 @@ int32_t shcampdaf_read_otp(struct msm_sensor_ctrl_t *s_ctrl, uint8_t *shcam_diag
 				pos+=4;
 				idx+=11;
 			}
-			SHCAMPDAF_INFO("%s:%d idx=0x%p \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
+			SHCAMPDAF_INFO("%s:%d idx=0x%pK \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
 			idx=0;
 			for(y=0;y<9;y++){
 				for(x=0;x<11;x++){
@@ -14204,7 +14204,7 @@ int32_t shcampdaf_read_otp(struct msm_sensor_ctrl_t *s_ctrl, uint8_t *shcam_diag
 				pos+=4;
 				idx+=11;
 			}
-			SHCAMPDAF_INFO("%s:%d idx=0x%p \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
+			SHCAMPDAF_INFO("%s:%d idx=0x%pK \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
 			
 			shcam_pdaf_binary_size = 0x860;
 		}
@@ -14464,7 +14464,7 @@ int32_t shcampdaf_read_otp(struct msm_sensor_ctrl_t *s_ctrl, uint8_t *shcam_diag
 //			pos++;
 //			shcam_pdaf_binary_size += 2;
 //		}
-		SHCAMPDAF_INFO("%s:%d idx=0x%p \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
+		SHCAMPDAF_INFO("%s:%d idx=0x%pK \n", __func__, __LINE__, (uint8_t *)((uint8_t *)pos - (uint8_t *)&shcam_pdaf_binary[0]));
 		SHCAMPDAF_INFO("%s:%d shcam_pdaf_binary_size=0x%0x \n", __func__, __LINE__, shcam_pdaf_binary_size);
 	}
 	
