@@ -1,4 +1,4 @@
-/* Copyright (c) 2009-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2009-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -109,10 +109,18 @@ static ssize_t panel_debug_base_offset_read(struct file *file,
 		return 0;	/* the end */
 
 	len = snprintf(buf, sizeof(buf), "0x%02zx %zx\n", dbg->off, dbg->cnt);
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(buff, buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;	/* increase offset */
@@ -231,10 +239,19 @@ static ssize_t panel_debug_base_reg_read(struct file *file,
 	if (mdata->debug_inf.debug_enable_clock)
 		mdata->debug_inf.debug_enable_clock(0);
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(to_user_buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(to_user_buf))
+			|| copy_to_user(user_buf, to_user_buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(user_buf, to_user_buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;	/* increase offset */
@@ -368,7 +385,11 @@ static ssize_t mdss_debug_base_offset_read(struct file *file,
 {
 	struct mdss_debug_base *dbg = file->private_data;
 	int len = 0;
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	char buf[24] = {'\0'};
+#else /* CONFIG_SHDISP */
 	char buf[24];
+#endif /* CONFIG_SHDISP */
 
 	if (!dbg)
 		return -ENODEV;
@@ -377,10 +398,18 @@ static ssize_t mdss_debug_base_offset_read(struct file *file,
 		return 0;	/* the end */
 
 	len = snprintf(buf, sizeof(buf), "0x%08zx %zx\n", dbg->off, dbg->cnt);
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(buff, buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;	/* increase offset */
@@ -702,7 +731,11 @@ static ssize_t mdss_debug_factor_read(struct file *file,
 {
 	struct mdss_fudge_factor *factor = file->private_data;
 	int len = 0;
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	char buf[32] = {'\0'};
+#else /* CONFIG_SHDISP */
 	char buf[32];
+#endif /* CONFIG_SHDISP */
 
 	if (!factor)
 		return -ENODEV;
@@ -712,10 +745,18 @@ static ssize_t mdss_debug_factor_read(struct file *file,
 
 	len = snprintf(buf, sizeof(buf), "%d/%d\n",
 			factor->numer, factor->denom);
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(buff, buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;	/* increase offset */
@@ -746,6 +787,10 @@ static ssize_t mdss_debug_perf_mode_write(struct file *file,
 	if (copy_from_user(buf, user_buf, count))
 		return -EFAULT;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	buf[count] = 0;	/* end of string */
+#endif /* CONFIG_SHDISP */
+
 	if (sscanf(buf, "%d", &perf_mode) != 1)
 		return -EFAULT;
 
@@ -766,7 +811,11 @@ static ssize_t mdss_debug_perf_mode_read(struct file *file,
 {
 	struct mdss_perf_tune *perf_tune = file->private_data;
 	int len = 0;
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	char buf[40] = {'\0'};
+#else /* CONFIG_SHDISP */
 	char buf[40];
+#endif /* CONFIG_SHDISP */
 
 	if (!perf_tune)
 		return -ENODEV;
@@ -774,14 +823,24 @@ static ssize_t mdss_debug_perf_mode_read(struct file *file,
 	if (*ppos)
 		return 0;	/* the end */
 
+#ifndef CONFIG_SHDISP /* CUST_ID_00070 */
 	buf[count] = 0;
+#endif /* CONFIG_SHDISP */
 
 	len = snprintf(buf, sizeof(buf), "min_mdp_clk %lu min_bus_vote %llu\n",
 	perf_tune->min_mdp_clk, perf_tune->min_bus_vote);
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(buff, buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;   /* increase offset */
@@ -801,7 +860,11 @@ static ssize_t mdss_debug_perf_panic_read(struct file *file,
 {
 	struct mdss_data_type *mdata = file->private_data;
 	int len = 0;
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	char buf[40] = {'\0'};
+#else /* CONFIG_SHDISP */
 	char buf[40];
+#endif /* CONFIG_SHDISP */
 
 	if (!mdata)
 		return -ENODEV;
@@ -811,10 +874,18 @@ static ssize_t mdss_debug_perf_panic_read(struct file *file,
 
 	len = snprintf(buf, sizeof(buf), "%d\n",
 		!mdata->has_panic_ctrl);
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (len < 0 || len >= sizeof(buf))
+#else /* CONFIG_SHDISP */
 	if (len < 0)
+#endif /* CONFIG_SHDISP */
 		return 0;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len))
+#else /* CONFIG_SHDISP */
 	if (copy_to_user(buff, buf, len))
+#endif /* CONFIG_SHDISP */
 		return -EFAULT;
 
 	*ppos += len;   /* increase offset */
@@ -877,8 +948,17 @@ static ssize_t mdss_debug_perf_panic_write(struct file *file,
 	if (!mdata)
 		return -EFAULT;
 
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	if (count >= sizeof(buf))
+		return -EFAULT;
+#endif /* CONFIG_SHDISP */
+
 	if (copy_from_user(buf, user_buf, count))
 		return -EFAULT;
+
+#ifdef CONFIG_SHDISP /* CUST_ID_00070 */
+	buf[count] = 0;	/* end of string */
+#endif /* CONFIG_SHDISP */
 
 	if (sscanf(buf, "%d", &disable_panic) != 1)
 		return -EFAULT;
