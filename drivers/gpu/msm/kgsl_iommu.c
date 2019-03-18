@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -789,7 +789,7 @@ static int kgsl_attach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 				}
 				iommu_unit->dev[j].attached = true;
 				KGSL_MEM_INFO(mmu->device,
-				"iommu pt %p attached to dev %p, ctx_id %d\n",
+				"iommu pt %pK attached to dev %pK, ctx_id %d\n",
 				iommu_pt->domain, iommu_unit->dev[j].dev,
 				iommu_unit->dev[j].ctx_id);
 				/* Init IOMMU unit clks here */
@@ -1803,8 +1803,8 @@ int _iommu_add_guard_page(struct kgsl_pagetable *pt,
 				protflags & ~IOMMU_WRITE);
 		if (ret) {
 			KGSL_CORE_ERR(
-			"iommu_map(%p, addr %x, flags %x) err: %d\n",
-			iommu_pt->domain, gpuaddr, protflags & ~IOMMU_WRITE,
+			"iommu_map(addr %x, flags %x) err: %d\n",
+			gpuaddr, protflags & ~IOMMU_WRITE,
 			ret);
 			return ret;
 		}
@@ -1863,8 +1863,8 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 	}
 
 	if (ret)
-		KGSL_CORE_ERR("iommu_map_range(%p, %x, %p, %zd, %x) err: %d\n",
-			iommu_pt->domain, iommu_virt_addr,
+		KGSL_CORE_ERR("iommu_map_range(%x, %p, %zd, %x) err: %d\n",
+			iommu_virt_addr,
 			sg_temp != NULL ? sg_temp : memdesc->sg, size,
 			protflags, ret);
 
